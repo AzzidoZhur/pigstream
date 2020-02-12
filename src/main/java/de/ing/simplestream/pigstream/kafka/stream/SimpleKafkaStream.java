@@ -4,6 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.Duration;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -16,7 +17,7 @@ import de.ing.simplestream.pigstream.kafka.json.KafkaJsonDeserializer;
 
 public class SimpleKafkaStream<T> extends Thread {
 
-	
+	private List<SimpleKafkaStream<T>> streamList;
 	private Processor<T> processor = null;
 	private final Deserializer<T> deserializer;
 	private Writer<T> writer = null;
@@ -56,7 +57,7 @@ public class SimpleKafkaStream<T> extends Thread {
 
 				for (ConsumerRecord<String, T> record : records) {
 					T object = record.value();
-					
+
 					if(processor != null)
 						object = processor.process(object);
 					
